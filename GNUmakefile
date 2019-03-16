@@ -61,6 +61,8 @@ OPENEBS_CLUSTER=openebs-cluster
 # Specify the date o build
 BUILD_DATE = $(shell date +'%Y%m%d%H%M%S')
 
+include ./buildscripts/provisioner-hostpath/Makefile.mk
+
 all: mayactl apiserver-image exporter-image pool-mgmt-image volume-mgmt-image admission-server-image
 
 dev: format
