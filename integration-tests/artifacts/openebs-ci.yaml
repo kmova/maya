@@ -84,8 +84,13 @@ spec:
       serviceAccountName: openebs-maya-operator
       containers:
       - name: maya-apiserver
-        imagePullPolicy: IfNotPresent
-        image: quay.io/openebs/m-apiserver:ci
+        #imagePullPolicy: IfNotPresent
+        #image: quay.io/openebs/m-apiserver:ci
+        imagePullPolicy: Always
+        image: openebs/m-apiserver:ci-it
+        volumeMounts:
+        - name: savecov
+          mountPath: /tmp/
         ports:
         - containerPort: 5656
         env:
@@ -164,6 +169,10 @@ spec:
             - version
           initialDelaySeconds: 30
           periodSeconds: 60
+      volumes:
+      - name: savecov
+        hostPath:
+          path: /tmp/test-maya
 ---
 apiVersion: v1
 kind: Service

@@ -323,9 +323,12 @@ apiserver-image: mayactl apiserver
 	@echo "--> apiserver image         "
 	@echo "----------------------------"
 	@cp bin/apiserver/${APISERVER} buildscripts/apiserver/
+	@cp bin/apiserver/${APISERVER}.test buildscripts/apiserver/
 	@cp bin/maya/${MAYACTL} buildscripts/apiserver/
 	@cd buildscripts/apiserver && sudo docker build -t openebs/m-apiserver:${IMAGE_TAG} --build-arg BUILD_DATE=${BUILD_DATE} .
+	@cd buildscripts/apiserver && sudo docker build -t openebs/m-apiserver:${IMAGE_TAG}-it -f Dockerfile.it --build-arg BUILD_DATE=${BUILD_DATE} .
 	@rm buildscripts/apiserver/${APISERVER}
+	@rm buildscripts/apiserver/${APISERVER}.test
 	@rm buildscripts/apiserver/${MAYACTL}
 
 # build openebs cluster binary

@@ -93,6 +93,16 @@ env GOOS=$GOOS GOARCH=$GOARCH go build -ldflags \
     -o $output_name\
     ./cmd/${CTLNAME}
 
+env GOOS=$GOOS GOARCH=$GOARCH go test -c -covermode=count -coverpkg "./..." \
+    -tags=integration -ldflags \
+    "-X github.com/openebs/maya/pkg/version.GitCommit=${GIT_COMMIT} \
+    -X main.CtlName='${CTLNAME}' \
+    -X github.com/openebs/maya/pkg/version.Version=${VERSION} \
+    -X github.com/openebs/maya/pkg/version.VersionMeta=${VERSION_META}"\
+    -o ${output_name}.test \
+    ./cmd/${CTLNAME}
+
+echo ""
 echo ""
 
 # Move all the compiled things to the $GOPATH/bin
