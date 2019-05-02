@@ -7,7 +7,7 @@ metadata:
     cas.openebs.io/config: |
       - name: BasePath
         value: "/var/openebs"
-provisioner: openebs.io/host-path
+provisioner: openebs.io/local
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
 ---
