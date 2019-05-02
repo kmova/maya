@@ -19,7 +19,7 @@ package main
 import (
 	"os"
 
-	"github.com/openebs/maya/cmd/provisioner-hostpath/app"
+	"github.com/openebs/maya/cmd/provisioner-localpv/app"
 	mlogger "github.com/openebs/maya/pkg/logs"
 )
 
@@ -30,7 +30,7 @@ func main() {
 	os.Exit(0)
 }
 
-// run starts the dynamic provisioner for host path PVs
+// run starts the dynamic provisioner for Local PVs
 func run() error {
 	// Init logging
 	mlogger.InitLogs()

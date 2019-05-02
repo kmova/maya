@@ -31,7 +31,7 @@ import (
 
 var (
 	cmdName         = "provisioner"
-	provisionerName = "openebs.io/host-path"
+	provisionerName = "openebs.io/local"
 	usage           = fmt.Sprintf("%s", cmdName)
 )
 
