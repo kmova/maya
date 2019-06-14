@@ -32,6 +32,7 @@ import (
 	hostpath "github.com/openebs/maya/pkg/hostpath/v1alpha1"
 
 	container "github.com/openebs/maya/pkg/kubernetes/container/v1alpha1"
+	//persistentvolume "github.com/openebs/maya/pkg/kubernetes/persistentvolume/v1alpha1"
 	pod "github.com/openebs/maya/pkg/kubernetes/pod/v1alpha1"
 	volume "github.com/openebs/maya/pkg/kubernetes/volume/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
@@ -71,6 +72,7 @@ func (pOpts *HelperPodOptions) validate() error {
 	return nil
 }
 
+/*
 // getPathAndNodeForPV inspects the PV spec to determine the hostpath
 //  and the node of OpenEBS Local PV. Both types of OpenEBS Local PV
 //  (storage type = hostpath and device) use:
@@ -79,51 +81,55 @@ func (pOpts *HelperPodOptions) validate() error {
 //  Note: This function also takes care of deleting OpenEBS Local PVs
 //  provisioned in 0.9, which were using HostPathVolumeSource to
 //  specify the path.
-func (p *Provisioner) getPathAndNodeForPV(pv *corev1.PersistentVolume) (string, string, error) {
-	path := ""
-	local := pv.Spec.PersistentVolumeSource.Local
-	if local == nil {
-		//Handle the case of Local PV created in 0.9 using
-		//HostPathVolumeSource
-		hostPath := pv.Spec.PersistentVolumeSource.HostPath
-		if hostPath == nil {
-			return "", "", errors.Errorf("no HostPath set")
-		}
-		path = hostPath.Path
-	} else {
-		path = local.Path
-	}
-
-	nodeAffinity := pv.Spec.NodeAffinity
-	if nodeAffinity == nil {
-		return "", "", errors.Errorf("no NodeAffinity set")
-	}
-	required := nodeAffinity.Required
-	if required == nil {
-		return "", "", errors.Errorf("no NodeAffinity.Required set")
-	}
-
-	node := ""
-	for _, selectorTerm := range required.NodeSelectorTerms {
-		for _, expression := range selectorTerm.MatchExpressions {
-			if expression.Key == KeyNode &&
-				expression.Operator == corev1.NodeSelectorOpIn {
-				if len(expression.Values) != 1 {
-					return "", "", errors.Errorf("multiple values for the node affinity")
+func (p *Provisioner) lgetPathAndNodeForPV(pv *corev1.PersistentVolume) (string, string, error) {
+	pvObj := persistentvolume.NewForAPIObject(pv)
+	path := pvObj.GetPath()
+	node := pvObj.GetAffinitedNode()
+			path := ""
+			local := pv.Spec.PersistentVolumeSource.Local
+			if local == nil {
+				//Handle the case of Local PV created in 0.9 using
+				//HostPathVolumeSource
+				hostPath := pv.Spec.PersistentVolumeSource.HostPath
+				if hostPath == nil {
+					return "", "", errors.Errorf("no HostPath set")
 				}
-				node = expression.Values[0]
+				path = hostPath.Path
+			} else {
+				path = local.Path
+			}
+
+		nodeAffinity := pv.Spec.NodeAffinity
+		if nodeAffinity == nil {
+			return "", "", errors.Errorf("no NodeAffinity set")
+		}
+		required := nodeAffinity.Required
+		if required == nil {
+			return "", "", errors.Errorf("no NodeAffinity.Required set")
+		}
+
+		node := ""
+		for _, selectorTerm := range required.NodeSelectorTerms {
+			for _, expression := range selectorTerm.MatchExpressions {
+				if expression.Key == KeyNode &&
+					expression.Operator == corev1.NodeSelectorOpIn {
+					if len(expression.Values) != 1 {
+						return "", "", errors.Errorf("multiple values for the node affinity")
+					}
+					node = expression.Values[0]
+					break
+				}
+			}
+			if node != "" {
 				break
 			}
 		}
-		if node != "" {
-			break
+		if node == "" {
+			return "", "", errors.Errorf("cannot find affinited node")
 		}
-	}
-	if node == "" {
-		return "", "", errors.Errorf("cannot find affinited node")
-	}
 	return path, node, nil
 }
+*/
 
 // createInitPod launches a helper(busybox) pod, to create the host path.
 //  The local pv expect the hostpath to be already present before mounting
