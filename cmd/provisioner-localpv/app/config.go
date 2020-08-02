@@ -46,6 +46,15 @@ const (
 	// and can be configured via the StorageClass annotations.
 	KeyPVFSType = "FSType"
 
+	//KeyBDType defines type to of block device to be used with devices
+	// and can be configured via the StorageClass annotations.
+	//
+	//The BD type when specified should match the valid
+	// block device type found at BlockDevice.spec.details.deviceType
+	// Current valid values are disk, sparse
+	KeyBDType = "BDType"
+
+	//KeyBDTag defines the value for the Block Device Tag
 	//KeyBDTag defines the value for the Block Device Tag
 	//label selector configured via the StorageClass annotations.
 	//User can group block devices across nodes by setting the
@@ -172,6 +181,17 @@ func (c *VolumeConfig) GetFSType() string {
 		return ""
 	}
 	return fsType
+}
+
+//GetBDTypeValue returns the BDType value configured
+// in StorageClass. Default is "", auto-determined
+// NDM operator
+func (c *VolumeConfig) GetBDTypeValue() string {
+	bdTypeValue := c.getValue(KeyBDType)
+	if len(strings.TrimSpace(bdTypeValue)) == 0 {
+		return ""
+	}
+	return bdTypeValue
 }
 
 //GetBDTagValue returns the block device tag

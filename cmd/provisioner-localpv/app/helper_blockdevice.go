@@ -69,6 +69,10 @@ type HelperBlockDeviceOptions struct {
 	//bdTagValue is the value passed for
 	// BlockDeviceTag via StorageClass config
 	bdTagValue string
+
+	//bdTypeValue is the value passed for
+	// BDType via StorageClass config
+	bdTypeValue string
 }
 
 // validate checks that the required fields to create BDC
@@ -132,9 +136,14 @@ func (p *Provisioner) createBlockDeviceClaim(blkDevOpts *HelperBlockDeviceOption
 		WithFinalizer(LocalPVFinalizer).
 		WithBlockVolumeMode(blkDevOpts.volumeMode)
 
-	// If bdTagValue is configure, set it on the BDC
+	// If bdTagValue is configured, set it on the BDC
 	if len(blkDevOpts.bdTagValue) > 0 {
 		bdcObjBuilder.WithBlockDeviceTag(blkDevOpts.bdTagValue)
+	}
+
+	// If bdTypeValue is configured, set it on the BDC
+	if len(blkDevOpts.bdTypeValue) > 0 {
+		bdcObjBuilder.WithDeviceType(blkDevOpts.bdTypeValue)
 	}
 
 	bdcObj, err := bdcObjBuilder.Build()
